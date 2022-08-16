@@ -1,0 +1,22 @@
+   node{
+   stage('cloning the project from git'){
+        git branch: 'master', credentialsId: 'lgolla1', url: 'https://github.optum.com/gov-prog-mdp/mdp_datapipeline.git'
+    }
+    stage('SonarQube analysis'){
+        def scannerHome = tool 'Sonar';
+        withSonarQubeEnv('Sonar'){
+            sh "${scannerHome}/bin/sonar-scanner \
+              -D sonar.projectKey=com.optum.MDT:Databricks \
+              -D sonar.sources=notebooks,FIN360,StreamProcessing/dependencies \
+              -D sonar.language=py \
+              -D sonar.projectVersion=1.12 \
+              -D sonar.sourceEncoding=UTF-8 \
+              -D sonar.host.url=https://sonar.optum.com \
+              -D sonar.login=092c919905283a6d35ff1abe2128fc52e48a6156 \
+              -D sonar.python.file.suffixes=.py \
+              -D sonar.findbugs.allowuncompiledcode"       
+        }
+    
+    }
+    
+}
